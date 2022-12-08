@@ -46,6 +46,10 @@ func RegisterCommands() {
 	RegisterCommandHandlers(CallDataCmd{})
 	// Write methods
 	RegisterCommandHandlers(SetBalanceCmd{})
+	RegisterCommandHandlers(TransactCmd{})
+	//
+	RegisterCommandHandlers(SetBalanceCmd{})
+	RegisterCommandHandlers(TraceCmd{})
 }
 
 func init() {

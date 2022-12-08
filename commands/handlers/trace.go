@@ -8,15 +8,16 @@ import (
 	"github.com/DenrianWeiss/taroly/utils/hx"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"strconv"
+	"strings"
 )
 
 type TraceCmd struct{}
 
-func (*TraceCmd) Command() string {
+func (TraceCmd) Command() string {
 	return "trace"
 }
 
-func (*TraceCmd) HandleCommand(message tgbotapi.Message) {
+func (TraceCmd) HandleCommand(message tgbotapi.Message) {
 	if !auth.IsAuth(strconv.Itoa(int(message.From.ID))) {
 		reply := tgbotapi.NewMessage(message.Chat.ID, "You are not authorized to use this command.")
 		reply.ReplyToMessageID = message.MessageID
@@ -24,7 +25,8 @@ func (*TraceCmd) HandleCommand(message tgbotapi.Message) {
 		return
 	}
 	arg := message.CommandArguments()
-	if arg == "" || !hx.IsValidHex(arg) {
+	argSplit := strings.Split(arg, " ")
+	if argSplit[0] == "" || !hx.IsValidHex(argSplit[0]) {
 		reply := tgbotapi.NewMessage(message.Chat.ID, "Please provide a transaction hash.")
 		reply.ReplyToMessageID = message.MessageID
 		_, _ = bot.GetBot().Send(reply)
@@ -45,7 +47,7 @@ func (*TraceCmd) HandleCommand(message tgbotapi.Message) {
 			return
 		}
 	}
-	if user.GetUserOnlineMode(strconv.Itoa(int(message.From.ID))) {
+	if user.GetUserOnlineMode(strconv.Itoa(int(message.From.ID))) || len(argSplit) == 1 {
 		reply := tgbotapi.NewMessage(message.Chat.ID, "For online mode please use tenderly. https://dashboard.tenderly.co/explorer")
 		reply.ReplyToMessageID = message.MessageID
 		_, _ = bot.GetBot().Send(reply)
@@ -54,6 +56,6 @@ func (*TraceCmd) HandleCommand(message tgbotapi.Message) {
 		reply := tgbotapi.NewMessage(message.Chat.ID, "this will take somme minutes.")
 		reply.ReplyToMessageID = message.MessageID
 		_, _ = bot.GetBot().Send(reply)
-		go tasks.TraceJob(message.Chat.ID, message.MessageID, rpc, arg)
+		go tasks.TraceJob(message.Chat.ID, message.MessageID, rpc, argSplit[0])
 	}
 }
