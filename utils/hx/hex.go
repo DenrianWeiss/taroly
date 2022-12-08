@@ -11,16 +11,6 @@ func HexStringToBytes(s string) []byte {
 	return v
 }
 
-func FilterUnPrintable(s string) string {
-	r := ""
-	for _, c := range s {
-		if c >= 32 && c <= 126 {
-			r += string(c)
-		}
-	}
-	return r
-}
-
 func IsValidHex(s string) bool {
 	s = strings.TrimPrefix(s, "0x")
 	_, err := hex.DecodeString(s)

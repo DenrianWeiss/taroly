@@ -49,5 +49,5 @@ func RunCall(rpc, txId string) string {
 	if err != nil {
 		return ""
 	}
-	return string(output)
+	return strings.TrimLeft(strings.TrimPrefix(string(output), "Executing previous transactions from the block."), "\r\n")
 }

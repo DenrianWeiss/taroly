@@ -9,6 +9,7 @@ You need to set the following environment variables:
 TAROLY_ROOT_USER Admin telegram user id
 TAROLY_RPC_URL Mapping of url and chain names. 
 TAROLY_TELEGRAM_TOKEN Telegram bot token
+TAROLY_WEB_URL Web url for trace command
 ```
 
 TAROLY_RPC_URL Example:
@@ -112,7 +113,7 @@ Same with transactwithvalue, but with the given amount.
 
 ### /trace [tx_hash]
 
-todo(Performance issue)
+Get transaction trace result.
 
 Traces the given transaction.
 

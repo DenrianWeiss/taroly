@@ -23,7 +23,7 @@ func TestCast4Byte(t *testing.T) {
 }
 
 func TestCastRun(t *testing.T) {
-	r := cast.RunCall("https://rpc.ankr.com/eth", "0x3350ea2b4c77db04db33a909bb1196ff4aa171200cbe413d5de5c908602fb6d5")
+	r := cast.RunCall("https://rpc.ankr.com/eth", "0xe552713c4b14c46ea6a84f91479953c374a7c5af149c9e81f768dd8a5d0819eb")
 	t.Log(r)
 }
 
