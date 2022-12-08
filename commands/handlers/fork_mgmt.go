@@ -40,7 +40,7 @@ func (NewForkCmd) HandleCommand(message tgbotapi.Message) {
 		return
 	}
 	argsList := strings.Split(args, " ")
-	if len(argsList) >= 2 {
+	if len(argsList) > 2 {
 		reply := tgbotapi.NewMessage(message.Chat.ID, "Please provide a fork name and a fork block number.\n"+
 			"Example: /newfork mainnet 11451419")
 		reply.ReplyToMessageID = message.MessageID
