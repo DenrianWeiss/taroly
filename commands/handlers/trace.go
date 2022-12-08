@@ -47,7 +47,7 @@ func (TraceCmd) HandleCommand(message tgbotapi.Message) {
 			return
 		}
 	}
-	if user.GetUserOnlineMode(strconv.Itoa(int(message.From.ID))) || len(argSplit) == 1 {
+	if user.GetUserOnlineMode(strconv.Itoa(int(message.From.ID))) && len(argSplit) == 1 {
 		reply := tgbotapi.NewMessage(message.Chat.ID, "For online mode please use tenderly. https://dashboard.tenderly.co/explorer")
 		reply.ReplyToMessageID = message.MessageID
 		_, _ = bot.GetBot().Send(reply)
