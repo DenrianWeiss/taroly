@@ -20,7 +20,8 @@ func Serve() {
 			c.Data(200, "text/plain", []byte("No trace result found for "+txId))
 			return
 		}
-		c.Data(200, "text/html", []byte(fmt.Sprintf("<html><head><title>Trace result for:%s</title></head><body>%s</body></html>", txId, result)))
+		c.Data(200, "text/html", []byte(fmt.Sprintf("<html><head><title>Trace result for:%s</title></head>"+
+			"<body style=\"font: monospace;\">%s</body></html>", txId, result)))
 	})
 	err := server.Run(":80")
 	if err != nil {
