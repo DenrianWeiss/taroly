@@ -1,0 +1,10 @@
+services:
+  taroly:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_traefik"
+      - "traefik.http.routers.to-taroly.rule=Host(`<SUBDOMAIN>.<DOMAIN>`)" # Replace <SUBDOMAIN> and <DOMAIN> with your domain
+      - "traefik.http.routers.to-taroly.entrypoints=websecure"
+      - "traefik.http.routers.to-taroly.tls=true"
+      - "traefik.http.routers.to-taroly.tls.certresolver=myresolver" # Replace myresolver with your certresolver
+      - "traefik.http.services.http-taroly.loadbalancer.server.port=80"

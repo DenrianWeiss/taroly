@@ -26,6 +26,17 @@ FORK_PORT_START Port to start the forked chains. default 11400
 FORK_PORT_END Port to end the forked chains. default FORK_PORT_START + 100
 ```
 
+### Deployment
+
+#### Docker
+
+Use `nekogawa/taroly:latest` image.
+
+#### Docker Compose
+
+See `docker-compose.yml` for example.  
+Please notice that docker-compose.override.yml is for running with traefik.
+
 ## Commands
 
 ### /auth

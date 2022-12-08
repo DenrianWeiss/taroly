@@ -1,0 +1,25 @@
+version: 3
+
+services:
+  taroly:
+    image: nekogawa/taroly
+    restart: unless-stopped
+    # Persist data for authentication
+    volumes:
+      - persist:/persist
+    environment:
+      TAROLY_ROOT_USER: 111111 # Your telegram user id
+      TAROLY_RPC_URL: "{\"eth\": \"https://rpc.ankr.com/eth\"}"
+      TAROLY_TELEGRAM_TOKEN: "Bot111111:aaaaaaaaaaa" # Your telegram bot token
+      FORK_PORT_START: 11400 # Start port for forked node
+      FORK_PORT_END: 11500 # End port for forked node
+    networks:
+      traefik_traefik:
+
+
+volumes:
+  persist:
+
+networks:
+  traefik_traefik: # Traefik port
+    external: true
