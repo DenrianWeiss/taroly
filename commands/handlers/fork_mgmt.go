@@ -1,13 +1,19 @@
 package handlers
 
 import (
+	"encoding/base32"
+	json2 "encoding/json"
+	"fmt"
+	"github.com/DenrianWeiss/taroly/model"
 	"github.com/DenrianWeiss/taroly/service/auth"
 	"github.com/DenrianWeiss/taroly/service/bot"
 	"github.com/DenrianWeiss/taroly/service/cache/rpc"
 	"github.com/DenrianWeiss/taroly/service/cache/user"
 	"github.com/DenrianWeiss/taroly/service/eth_rpc"
 	"github.com/DenrianWeiss/taroly/service/foundry/anvil"
+	"github.com/DenrianWeiss/taroly/utils/hmac"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -139,4 +145,42 @@ func (StopForkCmd) HandleCommand(message tgbotapi.Message) {
 		_, _ = bot.GetBot().Send(reply)
 		return
 	}
+}
+
+type GetRpcCmd struct{}
+
+func (GetRpcCmd) Command() string {
+	return "getrpc"
+}
+
+func (GetRpcCmd) HandleCommand(message tgbotapi.Message) {
+	if !auth.IsAuth(strconv.Itoa(int(message.From.ID))) {
+		reply := tgbotapi.NewMessage(message.Chat.ID, "You are not authorized to use this command.")
+		reply.ReplyToMessageID = message.MessageID
+		_, _ = bot.GetBot().Send(reply)
+		return
+	}
+	s := user.GetUserStatus(strconv.Itoa(int(message.From.ID)))
+	if s.SimulationPid == 0 {
+		reply := tgbotapi.NewMessage(message.Chat.ID, "You are not running a fork.")
+		reply.ReplyToMessageID = message.MessageID
+		_, _ = bot.GetBot().Send(reply)
+		return
+	}
+	if s.OnlineMode {
+		reply := tgbotapi.NewMessage(message.Chat.ID, "You are running online mode.")
+		reply.ReplyToMessageID = message.MessageID
+		_, _ = bot.GetBot().Send(reply)
+		return
+	}
+	baseUri, _ := os.LookupEnv("TAROLY_WEB_URL")
+	json, _ := json2.Marshal(model.EndPoint{
+		Uid:  strconv.Itoa(int(message.From.ID)),
+		Port: strconv.Itoa(s.SimulationPort),
+	})
+	encoded := base32.StdEncoding.EncodeToString(json)
+	sig := hmac.SignWithNonce(encoded)
+	reply := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("Your rpc endpoint is %srcp/%s/%s", baseUri, encoded, sig))
+	reply.ReplyToMessageID = message.MessageID
+	_, _ = bot.GetBot().Send(reply)
 }

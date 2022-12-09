@@ -50,6 +50,7 @@ func RegisterCommands() {
 	//
 	RegisterCommandHandlers(SetBalanceCmd{})
 	RegisterCommandHandlers(TraceCmd{})
+	RegisterCommandHandlers(GetRpcCmd{})
 }
 
 func init() {

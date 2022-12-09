@@ -61,6 +61,10 @@ Sets the chain to use for online mode.
 
 Creates a new fork for the given chain name. If fork_block_number is not provided, the latest block will be used.
 
+### /getrpc 
+
+Get endpoint for your rpc
+
 ### /stopfork
 
 Stops the current fork.

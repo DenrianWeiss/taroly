@@ -8,3 +8,8 @@ services:
       - "traefik.http.routers.to-taroly.tls=true"
       - "traefik.http.routers.to-taroly.tls.certresolver=myresolver" # Replace myresolver with your certresolver
       - "traefik.http.services.http-taroly.loadbalancer.server.port=80"
+
+      - "traefik.http.middlewares.cors-headers.headers.accessControlAllowOriginList=*"
+      - "traefik.http.middlewares.cors-headers.headers.accessControlAllowHeaders=Origin, X-Requested-With, Content-Type, Accept, Authorization"
+      - "traefik.http.middlewares.cors-headers.headers.accessControlAllowMethods=GET, POST, PUT, DELETE, OPTIONS"
+
