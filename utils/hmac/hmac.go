@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"github.com/DenrianWeiss/taroly/utils/hx"
 	"github.com/google/uuid"
+	"strings"
 )
 
 var nonce string
@@ -19,13 +20,14 @@ func GetNonce() string {
 }
 
 func SignWithNonce(s string) string {
-	hmac := hmac.New(sha256.New, []byte(GetNonce()))
-	hash := hmac.Sum([]byte(s))
+	hmacV := hmac.New(sha256.New, []byte(GetNonce()))
+	hash := hmacV.Sum([]byte(s))
 	return hex.EncodeToString(hash)
 }
 
 func Validate(s, sig string) bool {
-	sHash := SignWithNonce(s)
+	sHash := SignWithNonce(strings.TrimRight(s, "\x00"))
+	sHex := hx.HexStringToBytes(sHash)
 	sigHex := hx.HexStringToBytes(sig)
-	return hmac.Equal([]byte(sHash), sigHex)
+	return hmac.Equal(sHex, sigHex)
 }

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/base32"
 	json2 "encoding/json"
 	"fmt"
 	"github.com/DenrianWeiss/taroly/model"
@@ -178,9 +177,8 @@ func (GetRpcCmd) HandleCommand(message tgbotapi.Message) {
 		Uid:  strconv.Itoa(int(message.From.ID)),
 		Port: strconv.Itoa(s.SimulationPort),
 	})
-	encoded := base32.StdEncoding.EncodeToString(json)
-	sig := hmac.SignWithNonce(encoded)
-	reply := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("Your rpc endpoint is %srcp/%s/%s", baseUri, encoded, sig))
+	sig := hmac.SignWithNonce(string(json))
+	reply := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("Your rpc endpoint is %srpc/%s", baseUri, sig))
 	reply.ReplyToMessageID = message.MessageID
 	_, _ = bot.GetBot().Send(reply)
 }

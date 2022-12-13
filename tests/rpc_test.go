@@ -1,8 +1,17 @@
 package tests
 
 import (
+	"encoding/base32"
+	json2 "encoding/json"
+	"github.com/DenrianWeiss/taroly/model"
+	"github.com/DenrianWeiss/taroly/service/cache/user"
 	"github.com/DenrianWeiss/taroly/service/eth_rpc"
+	"github.com/DenrianWeiss/taroly/service/foundry/anvil"
+	"github.com/DenrianWeiss/taroly/service/web"
+	"github.com/DenrianWeiss/taroly/utils/hmac"
+	"strconv"
 	"testing"
+	"time"
 )
 
 func TestJsonRpc(t *testing.T) {
@@ -19,4 +28,19 @@ func TestSetBalance(t *testing.T) {
 		panic(err)
 	}
 	t.Log(setBalance)
+}
+
+func TestNewRpc(t *testing.T) {
+	pid, port, _ := anvil.StartFork("eth", 0)
+	user.SetUserSimulation("100", pid, port)
+	json, _ := json2.Marshal(model.EndPoint{
+		Uid:  strconv.Itoa(100),
+		Port: strconv.Itoa(port),
+	})
+	encode := base32.StdEncoding.EncodeToString(json)
+	hmacV := hmac.SignWithNonce(string(json))
+	t.Log(encode)
+	t.Log(hmacV)
+	go web.Serve()
+	time.Sleep(600 * time.Second)
 }
