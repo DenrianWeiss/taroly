@@ -61,6 +61,9 @@ func DispatchCommand(message tgbotapi.Message) {
 	if commandHandlers, err := GetCommandHandlers(message.Command()); err == nil {
 		commandHandlers.HandleCommand(message)
 	} else {
+		if message.Command() == "" {
+			return
+		}
 		reply := tgbotapi.NewMessage(message.Chat.ID, "Command not found.")
 		reply.ReplyToMessageID = message.MessageID
 		_, _ = bot.GetBot().Send(reply)

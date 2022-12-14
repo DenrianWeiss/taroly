@@ -23,8 +23,14 @@ func (AuthCmd) HandleCommand(message tgbotapi.Message) {
 		_, _ = bot.GetBot().Send(reply)
 		return
 	} else {
-		// Get auth code.
-		authCode := message.CommandArguments()
+		var authCode string
+		replyTo := message.ReplyToMessage
+		if replyTo != nil {
+			authCode = strconv.Itoa(int(replyTo.From.ID))
+		} else {
+			// Get auth code.
+			authCode = message.CommandArguments()
+		}
 		// Check auth code.
 		if authCode == "" {
 			reply := tgbotapi.NewMessage(message.Chat.ID, "Please provide an auth id.")
@@ -32,6 +38,9 @@ func (AuthCmd) HandleCommand(message tgbotapi.Message) {
 			_, _ = bot.GetBot().Send(reply)
 		} else {
 			auth.AddAuth(authCode)
+			reply := tgbotapi.NewMessage(message.Chat.ID, "Auth code added for "+authCode+".")
+			reply.ReplyToMessageID = message.MessageID
+			_, _ = bot.GetBot().Send(reply)
 		}
 	}
 }
