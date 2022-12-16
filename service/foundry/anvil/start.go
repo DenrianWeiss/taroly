@@ -22,7 +22,7 @@ func StartFork(chainName string, blocknumber int64) (pid int, port int, err erro
 		}
 		var cmd *exec.Cmd
 		if blocknumber != 0 {
-			cmd = exec.Command(env.GetAnvilPath(), "--fork-url", ethRpc, "--fork-block-number", strconv.Itoa(int(blocknumber)), "-p", strconv.Itoa(port))
+			cmd = exec.Command(env.GetAnvilPath(), "--steps-tracing", "--fork-url", ethRpc, "--fork-block-number", strconv.Itoa(int(blocknumber)), "-p", strconv.Itoa(port))
 		} else {
 			cmd = exec.Command(env.GetAnvilPath(), "--fork-url", ethRpc, "-p", strconv.Itoa(port))
 		}
