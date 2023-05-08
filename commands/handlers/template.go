@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"errors"
-	"github.com/DenrianWeiss/taroly/service/bot"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -60,12 +59,5 @@ func init() {
 func DispatchCommand(message tgbotapi.Message) {
 	if commandHandlers, err := GetCommandHandlers(message.Command()); err == nil {
 		commandHandlers.HandleCommand(message)
-	} else {
-		if message.Command() == "" {
-			return
-		}
-		reply := tgbotapi.NewMessage(message.Chat.ID, "Command not found.")
-		reply.ReplyToMessageID = message.MessageID
-		_, _ = bot.GetBot().Send(reply)
 	}
 }
